@@ -20,7 +20,7 @@ namespace QuestExampleApi.Controllers
         }
         [HttpPost]
         [Route("DocumentCreate")]
-        public async Task<DocumentCreateResponseModel> DocumentCreate(DocumentCreateRequestModel request)
+        public async Task<DocumentCreateResponse> DocumentCreate(DocumentCreateRequest request)
         {
             _logger.LogInformation(JsonSerializer.Serialize(request));
 

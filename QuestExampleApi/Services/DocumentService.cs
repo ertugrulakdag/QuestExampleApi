@@ -4,72 +4,28 @@ using QuestExampleApi.Model;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using System.Text;
 
 namespace QuestExampleApi.Services
 {
     public class DocumentService : IDocumentService
     {
-        public async Task<DocumentCreateResponseModel> DocumentCreate(DocumentCreateRequestModel request)
+        public async Task<DocumentCreateResponse> DocumentCreate(DocumentCreateRequest request)
         {
-            var response = new DocumentCreateResponseModel();
+            var response = new DocumentCreateResponse();
             try
             {
-                //var doc = Document.Create(container => container.Page(page =>//QuestPDF türlerini içe aktarıyoruz.
-                //{
-                //    page.Size(PageSizes.A4);
-                //    page.Margin(2, Unit.Centimetre);
-                //    page.DefaultTextStyle(x => x.FontSize(12));//Bir sayfanın bazı temel özelliklerini belirleriz: sayfa boyutu, kenar boşlukları ve varsayılan yazı tipi boyutu
-
-                //    page.Content() .Column(x => x.Item().Text(Placeholders.Paragraph()));//İçerik, İçerik ile birlikte eklenir. Bir sütun metinden oluşur. Sütuna bir metin öğesi ekliyoruz. Placeholders.Paragraph, metnin lorem impsum paragrafını oluşturur.
-                //}));
-
-                //doc.GeneratePdf("test.pdf");
-
-                //Document.Create(container =>
-                //{
-                //    container.Page(page =>
-                //    {
-                //        page.Size(PageSizes.A4);
-                //        page.Margin(2, Unit.Centimetre);
-                //        page.Background(Colors.White);
-                //        page.DefaultTextStyle(x => x.FontSize(20));
-
-                //        page.Header()
-                //            .Text("Hello PDF!")
-                //            .SemiBold().FontSize(36).FontColor(Colors.Blue.Medium);
-
-                //        page.Content()
-                //            .PaddingVertical(1, Unit.Centimetre)
-                //            .Column(x =>
-                //            {
-                //                x.Spacing(20);
-
-                //                x.Item().Text(Placeholders.LoremIpsum());
-                //                x.Item().Image(Placeholders.Image(200, 100));
-                //            });
-
-                //        page.Footer()
-                //            .AlignCenter()
-                //            .Text(x =>
-                //            {
-                //                x.Span("Page ");
-                //                x.CurrentPageNumber();
-                //            });
-                //    });
-                //}).GeneratePdf("hello.pdf");
-
                 Document document = Document.Create(container =>
                 {
                     container.Page(page =>
                     {
-                        page.Size(PageSizes.A4);
-                        page.Margin(2, Unit.Centimetre);
-                        page.PageColor(Colors.White);
-                        page.DefaultTextStyle(x => x.FontSize(20));
+                        page.Size(PageSizes.A4);//Sayfa Boyutu
+                        page.Margin(2, Unit.Centimetre);//Sağ ve Sol Boşluk Ayarı
+                        page.PageColor(Colors.White);//Sayfa Rengi
+                        page.DefaultTextStyle(x => x.FontSize(10));
                         page.Header()
-                            .Text("Merhaba || Hello PDF ! ")
-                            .SemiBold().FontSize(36).FontColor(Colors.Blue.Medium);
+                            .Text("Merhaba PDF || Hello PDF ! ")
+                            .SemiBold().FontSize(36)
+                            .FontColor(Colors.Red.Darken1);
 
                         page.Content()
                                     .Column(x =>

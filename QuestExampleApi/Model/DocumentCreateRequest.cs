@@ -1,6 +1,6 @@
 ﻿namespace QuestExampleApi.Model
 {
-    public class DocumentCreateRequestModel
+    public class DocumentCreateRequest
     {
         public string Istek { get; set; }
     }
