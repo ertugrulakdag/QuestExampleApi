@@ -11,7 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IDocumentService, DocumentService>();
-QuestPDF.Settings.License = LicenseType.Community;
+QuestPDF.Settings.License = LicenseType.Community; 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
