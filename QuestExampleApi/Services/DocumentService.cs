@@ -12,17 +12,19 @@ namespace QuestExampleApi.Services
     public class DocumentService : IDocumentService
     {
         private readonly IHttpClientFactory _clientFactory;
-        public IEnumerable<ProductDTO>? _products { get; private set; }
-
-        public DocumentService(IHttpClientFactory clientFactory)
+        private readonly DummyJsonService _dummyJsonService;
+        public DocumentService(IHttpClientFactory clientFactory, DummyJsonService dummyJsonService)
         {
             _clientFactory = clientFactory;
+            _dummyJsonService = dummyJsonService;
         }
         public async Task<DocumentCreateResponse> DocumentCreate(DocumentCreateRequest request, CancellationToken cancellationToken)
         {
             var response = new DocumentCreateResponse();
             try
             {
+                List<ProductDTO> products = new List<ProductDTO>();
+
                 //Örnek:1 - Example:1
                 var req1 = new HttpRequestMessage(HttpMethod.Get, "https://dummyjson.com/products/1");
                 req1.Headers.Add("Accept", "application/json");
@@ -32,21 +34,33 @@ namespace QuestExampleApi.Services
                 if (res1.IsSuccessStatusCode)
                 {
                     using var resStream1 = await res1.Content.ReadAsStreamAsync();
-                    _products = await JsonSerializer.DeserializeAsync<IEnumerable<ProductDTO>>(resStream1);
+                    var product1 = await JsonSerializer.DeserializeAsync<ProductDTO>(resStream1);
+                    if (product1 != null)
+                    {
+                        products.Add(product1);
+                    }
                 }
 
                 //Örnek:2 - Example:2
                 var req2 = new HttpRequestMessage(HttpMethod.Get, "products/2");
                 var client2 = _clientFactory.CreateClient("dummyjson");
-                var res2 = await client2.SendAsync(req2,cancellationToken);
+                var res2 = await client2.SendAsync(req2, cancellationToken);
                 if (res2.IsSuccessStatusCode)
                 {
                     using var resStream2 = await res2.Content.ReadAsStreamAsync();
-                    _products = await JsonSerializer.DeserializeAsync<IEnumerable<ProductDTO>>(resStream2);
+                    var product2 = await JsonSerializer.DeserializeAsync<ProductDTO>(resStream2);
+                    if (product2 != null)
+                    {
+                        products.Add(product2);
+                    }
                 }
 
                 //Örnek:3 - Example:3
-
+                var product3 = await _dummyJsonService.GetProduct(3);
+                if (product3 != null)
+                {
+                    products.Add(product3);
+                }
                 Document document = Document.Create(container =>
                 {
                     container.Page(page =>
@@ -93,7 +107,7 @@ namespace QuestExampleApi.Services
                 byte[] pdfBytes = document.GeneratePdf();
                 MemoryStream ms = new MemoryStream(pdfBytes);
 
-
+                response.Products = products;
                 response.Cevap = Convert.ToBase64String(pdfBytes);
 
             }
