@@ -11,13 +11,11 @@ namespace QuestExampleApi.Services
 {
     public class DocumentService : IDocumentService
     {
-        private readonly HttpClient _httpClient;
         private readonly IHttpClientFactory _clientFactory;
         public IEnumerable<ProductDTO>? _products { get; private set; }
 
-        public DocumentService(HttpClient client, IHttpClientFactory clientFactory)
+        public DocumentService(IHttpClientFactory clientFactory)
         {
-            _httpClient = client;
             _clientFactory = clientFactory;
         }
         public async Task<DocumentCreateResponse> DocumentCreate(DocumentCreateRequest request, CancellationToken cancellationToken)
