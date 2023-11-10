@@ -20,11 +20,11 @@ namespace QuestExampleApi.Controllers
         }
         [HttpPost]
         [Route("DocumentCreate")]
-        public async Task<DocumentCreateResponse> DocumentCreate(DocumentCreateRequest request)
+        public async Task<DocumentCreateResponse> DocumentCreate(DocumentCreateRequest request, CancellationToken cancellationToken)
         {
             _logger.LogInformation(JsonSerializer.Serialize(request));
 
-            return await this._documentService.DocumentCreate(request);
+            return await this._documentService.DocumentCreate(request, cancellationToken);
         }
     }
 }

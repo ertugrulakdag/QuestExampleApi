@@ -11,7 +11,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IDocumentService, DocumentService>();
-QuestPDF.Settings.License = LicenseType.Community; 
+QuestPDF.Settings.License = LicenseType.Community;
+
+builder.Services.AddHttpClient("dummyjson", c =>//HttpClient isteklerini yapabilmemiz için ekliyoruz.
+{
+    c.BaseAddress = new Uri("https://dummyjson.com/");
+    c.DefaultRequestHeaders.Add("Accept", "application/json");
+    c.DefaultRequestHeaders.Add("User-Agent", "HttpClientFactory-Sample");
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

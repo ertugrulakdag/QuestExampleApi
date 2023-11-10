@@ -4,7 +4,7 @@ namespace QuestExampleApi.Contracts
 {
     public interface IDocumentService
     {
-        Task<DocumentCreateResponse> DocumentCreate(DocumentCreateRequest request);
+        Task<DocumentCreateResponse> DocumentCreate(DocumentCreateRequest request, CancellationToken cancellationToken);
 
     }
 }
