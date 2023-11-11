@@ -83,7 +83,7 @@ namespace QuestExampleApi.Services
             }
             catch (Exception ex)
             {
-                throw new Exception($"Exception: {ex.Message}, {(ex.InnerException != null ? "InnerException: " + ex.InnerException.Message : string.Empty)} Url: {requestUri}");
+                throw new Exception($"{ex.Message} {(ex.InnerException != null ? " Inner Exception: " + ex.InnerException.Message : string.Empty)} Url: {requestUri}");
             }
 
         }
