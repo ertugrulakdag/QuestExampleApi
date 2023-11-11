@@ -15,11 +15,11 @@ builder.Services.AddScoped<IDocumentService, DocumentService>();
 QuestPDF.Settings.License = LicenseType.Community;
 QuestPDF.Settings.CheckIfAllTextGlyphsAreAvailable = false;
 
-builder.Services.AddHttpClient("dummyjson", c =>//HttpClient isteklerini yapabilmemiz için ekliyoruz.
+builder.Services.AddHttpClient("dummyjson", c =>//HttpClient isteklerini yapabilmemiz iï¿½in ekliyoruz.
 {
     c.BaseAddress = new Uri("https://dummyjson.com/");
     c.DefaultRequestHeaders.Add("Accept", "application/json");
-    c.DefaultRequestHeaders.Add("User-Agent", "HttpClientFactory-Sample");
+    c.DefaultRequestHeaders.Add("User-Agent", "HttpClientFactory-Ornek");
 });
 builder.Services.AddHttpClient<DummyJsonService>();
 

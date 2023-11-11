@@ -11,10 +11,12 @@ namespace QuestExampleApi.Services
 {
     public class DocumentService : IDocumentService
     {
+        private readonly ILogger<DocumentService> _logger;
         private readonly IHttpClientFactory _clientFactory;
         private readonly DummyJsonService _dummyJsonService;
-        public DocumentService(IHttpClientFactory clientFactory, DummyJsonService dummyJsonService)
+        public DocumentService(ILogger<DocumentService> logger,IHttpClientFactory clientFactory, DummyJsonService dummyJsonService)
         {
+            _logger = logger;
             _clientFactory = clientFactory;
             _dummyJsonService = dummyJsonService;
         }
@@ -25,42 +27,59 @@ namespace QuestExampleApi.Services
             {
                 List<ProductDTO> products = new List<ProductDTO>();
 
-                //Örnek:1 - Example:1
-                var req1 = new HttpRequestMessage(HttpMethod.Get, "https://dummyjson.com/products/1");
-                req1.Headers.Add("Accept", "application/json");
-                req1.Headers.Add("User-Agent", "HttpClientFactory-Sample");
-                var client1 = _clientFactory.CreateClient();
-                var res1 = await client1.SendAsync(req1);
-                if (res1.IsSuccessStatusCode)
-                {
-                    using var resStream1 = await res1.Content.ReadAsStreamAsync();
-                    var product1 = await JsonSerializer.DeserializeAsync<ProductDTO>(resStream1);
-                    if (product1 != null)
-                    {
-                        products.Add(product1);
-                    }
-                }
+            //    //Örnek:1 - Example:1
+            //    var req1 = new HttpRequestMessage(HttpMethod.Get, "https://dummyjson.com/products/1");
+            //    req1.Headers.Add("Accept", "application/json");
+            //    req1.Headers.Add("User-Agent", "HttpClientFactory-Sample");
+            //    var client1 = _clientFactory.CreateClient();
+            //    var res1 = await client1.SendAsync(req1);
+            //    if (res1.IsSuccessStatusCode)
+            //    {
+            //        using var resStream1 = await res1.Content.ReadAsStreamAsync();
+            //        var product1 = await JsonSerializer.DeserializeAsync<ProductDTO>(resStream1);
+            //        if (product1 != null)
+            //        {
+            //            products.Add(product1);
+            //        }
+            //    }
 
-                //Örnek:2 - Example:2
-                var req2 = new HttpRequestMessage(HttpMethod.Get, "products/2");
-                var client2 = _clientFactory.CreateClient("dummyjson");
-                var res2 = await client2.SendAsync(req2, cancellationToken);
-                if (res2.IsSuccessStatusCode)
-                {
-                    using var resStream2 = await res2.Content.ReadAsStreamAsync();
-                    var product2 = await JsonSerializer.DeserializeAsync<ProductDTO>(resStream2);
-                    if (product2 != null)
-                    {
-                        products.Add(product2);
-                    }
-                }
+            //    //Örnek:2 - Example:2
+            //    var req2 = new HttpRequestMessage(HttpMethod.Get, "products/2");
+            //    var client2 = _clientFactory.CreateClient("dummyjson");
+            //    var res2 = await client2.SendAsync(req2, cancellationToken);
+            //    if (res2.IsSuccessStatusCode)
+            //    {
+            //        using var resStream2 = await res2.Content.ReadAsStreamAsync();
+            //        var product2 = await JsonSerializer.DeserializeAsync<ProductDTO>(resStream2);
+            //        if (product2 != null)
+            //        {
+            //            products.Add(product2);
+            //        }
+            //    }
 
-                //Örnek:3 - Example:3
-                var product3 = await _dummyJsonService.GetProduct(3);
-                if (product3 != null)
+            //    //Örnek:3 - Example:3
+            //    var product3 = await _dummyJsonService.GetProduct(3);
+            //    if (product3 != null)
+            //    {
+            //        products.Add(product3);
+            //    }
+
+
+            //    //Örnek:4 - Example:4
+            //    var product4 = await _dummyJsonService.GetRequest<ProductDTO>("products/4");
+            //    if (product4 != null)
+            //    {
+            //        products.Add(product4);
+            //    }
+
+                //Örnek: 5 - Example:5(Post Örneği)
+                PostExampleRequest postExampleRequest = new PostExampleRequest 
                 {
-                    products.Add(product3);
-                }
+                    Title = $"t-i-t-l-e {DateTime.Now.ToShortTimeString()}" 
+                };
+                var postExample = await _dummyJsonService.PostRequest<PostExampleRequest, PostExampleResponse>("products/add", postExampleRequest);
+                _logger.LogInformation($"Id:{postExample?.Id}");
+
                 Document document = Document.Create(container =>
                 {
                     container.Page(page =>
