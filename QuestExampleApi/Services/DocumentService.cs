@@ -14,7 +14,7 @@ namespace QuestExampleApi.Services
         private readonly ILogger<DocumentService> _logger;
         private readonly IHttpClientFactory _clientFactory;
         private readonly DummyJsonService _dummyJsonService;
-        public DocumentService(ILogger<DocumentService> logger,IHttpClientFactory clientFactory, DummyJsonService dummyJsonService)
+        public DocumentService(ILogger<DocumentService> logger, IHttpClientFactory clientFactory, DummyJsonService dummyJsonService)
         {
             _logger = logger;
             _clientFactory = clientFactory;
@@ -73,9 +73,9 @@ namespace QuestExampleApi.Services
                 }
 
                 //Örnek: 5 - Example:5(Post Örneği)
-                PostExampleRequest postExampleRequest = new PostExampleRequest 
+                PostExampleRequest postExampleRequest = new PostExampleRequest
                 {
-                    Title = $"t-i-t-l-e {DateTime.Now.ToShortTimeString()}" 
+                    Title = $"t-i-t-l-e {DateTime.Now.ToShortTimeString()}"
                 };
                 var postExample = await _dummyJsonService.PostRequest<PostExampleRequest, PostExampleResponse>("products/add", postExampleRequest);
                 _logger.LogInformation($"Id:{postExample?.Id}");
@@ -84,45 +84,45 @@ namespace QuestExampleApi.Services
                 {
                     container.Page(page =>
                     {
-                        page.Size(PageSizes.A4);//Sayfa Boyutu
-                        page.Margin(2, Unit.Centimetre);//Sağ ve Sol Boşluk Ayarı
-                        page.PageColor(Colors.White);//Sayfa Rengi
-                        page.DefaultTextStyle(x => x.FontSize(10));
+                        page.Margin(10);
+                        page.Size(PageSizes.A4);
+                        page.PageColor(Colors.White);
+                        page.DefaultTextStyle(x => x.FontSize(12));
+
                         page.Header()
-                            .Text("Merhaba PDF || Hello PDF ! ")
-                            .SemiBold().FontSize(36)
-                            .FontColor(Colors.Red.Darken1);
+                            .AlignCenter()
+                            .Text("Invoice #: 2023-77")
+                            .SemiBold().FontSize(24).FontColor(Colors.Grey.Darken4);
 
                         page.Content()
-                                    .Column(x =>
-                                    {
-                                        x.Item().Text(Placeholders.Sentence());
-                                        x.Spacing(10);
-                                        x.Item().Text(Placeholders.Sentence()).FontSize(15);
-                                        x.Spacing(10);
-                                        x.Item().Text(Placeholders.LoremIpsum());
-                                        x.Spacing(10);
-                                        x.Item().Text(Placeholders.Paragraph()).FontFamily("Georgia");
-                                        x.Spacing(10);
-                                        x.Item().Text(Placeholders.Sentence()).FontColor(Colors.Blue.Darken3);
-                                        x.Spacing(10);
-                                        x.Item().Text(txt =>
-                                        {
-                                            txt.Span("C# ").Italic();
-                                            txt.Span("is a modern, object-oriented, and type-safe programming language.");
-                                        });
-
-                                    });
-
-                        page.Footer()
-                            .AlignCenter()
-                            .Text(x =>
+                            .Table(table =>
                             {
-                                x.Span("Sayfa ");
-                                x.CurrentPageNumber();
+                                table.ColumnsDefinition(columns =>
+                                {
+                                    columns.ConstantColumn(100);
+                                    columns.RelativeColumn();
+                                    columns.RelativeColumn();
+                                });
+
+                                table.Header(header =>
+                                {
+                                    header.Cell().AlignLeft().Text("Sıra");
+                                    header.Cell().Text("Title");
+                                    header.Cell().Text("Category");
+                                });
+
+                                foreach (var item in products)
+                                {
+                                    table.Cell().AlignLeft().Text($"{item.Id} #");
+                                    table.Cell().Text(item.Title);
+                                    table.Cell().Text(item.Category);
+                                }
                             });
+
                     });
+                    
                 });
+
                 byte[] pdfBytes = document.GeneratePdf();
                 MemoryStream ms = new MemoryStream(pdfBytes);
 
