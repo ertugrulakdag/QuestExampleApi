@@ -1,0 +1,54 @@
+﻿@page "/"
+@inject IHttpClientFactory _clientFactory;
+<PageTitle>Quest Example Web Page</PageTitle>
+
+<h1>Quest Example</h1>
+
+<p role="status">Current count: @currentCount</p>
+<p role="status">Sonuç: @exception</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<button class="btn btn-primary" @onclick="DocumentCreate">Document Create</button><br />
+<embed src="@showedPdfContent" visible="false"   type="application/pdf" style="width: 100%;height: 930px;border: none;" frameborder="0" allowfullscreen />
+
+@code {
+    private int currentCount = 0;
+    private string exception = string.Empty;
+    private string showedPdfContent = string.Empty;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+    private async void DocumentCreate()
+    {
+        try
+        {
+            exception = string.Empty;
+            //var serialized = new StringContent("{\"ids\":[\"1\",\"2\"],\"data\":{\"message\":\"Your message\",\"tickerText\":\"Your ticket\",\"contentTitle\":\"Your content\"}}", System.Text.Encoding.UTF8, "application/json");
+            var serialized = new StringContent("{\"istek\":\"Your content\"}", System.Text.Encoding.UTF8, "application/json");
+            var req = new HttpRequestMessage(HttpMethod.Post, "api/QuestDocument/DocumentCreate");
+            req.Content = serialized;
+            var client = _clientFactory.CreateClient("questExampleApi");
+            var res = await client.SendAsync(req);
+            if (res.IsSuccessStatusCode)
+            {
+                using var stream = await res.Content.ReadAsStreamAsync();
+                string json = new StreamReader(stream).ReadToEnd();
+                dynamic obj = System.Text.Json.Nodes.JsonNode.Parse(json);
+                string cevapBase64 = (string)obj["cevap"];
+                showedPdfContent = $"data:application/pdf;base64,{cevapBase64}";
+                exception = "PDF Oluşturuldu";
+                StateHasChanged();
+            }
+            else 
+            {
+                exception = "Servis Çalışmadı!";
+            }
+        }
+        catch (Exception ex)
+        {
+              exception = $"{ex.Message} {(ex.InnerException != null ? " Inner Exception: " + ex.InnerException.Message : string.Empty)}";
+        }
+    }
+}

@@ -77,7 +77,7 @@ namespace QuestExampleApi.Services
                 {
                     Title = $"t-i-t-l-e {DateTime.Now.ToShortTimeString()}" 
                 };
-                var postExample = await _dummyJsonService.PostRequest<PostExampleRequest, PostExampleResponse>("products/add2", postExampleRequest);
+                var postExample = await _dummyJsonService.PostRequest<PostExampleRequest, PostExampleResponse>("products/add", postExampleRequest);
                 _logger.LogInformation($"Id:{postExample?.Id}");
 
                 Document document = Document.Create(container =>
