@@ -2,6 +2,6 @@
 {
     public class DocumentCreateRequest
     {
-        public string Istek { get; set; }
+        public string? Istek { get; set; }
     }
 }
