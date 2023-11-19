@@ -79,7 +79,7 @@ namespace QuestExampleApi.Services
                 };
                 var postExample = await _dummyJsonService.PostRequest<PostExampleRequest, PostExampleResponse>("products/add", postExampleRequest);
                 _logger.LogInformation($"Id:{postExample?.Id}");
-
+                float borderLine = (float)0.10;
                 Document document = Document.Create(container =>
                 {
                     container.Page(page =>
@@ -95,6 +95,10 @@ namespace QuestExampleApi.Services
                             .SemiBold().FontSize(24).FontColor(Colors.Grey.Darken4);
 
                         page.Content()
+
+                            .Padding(5)
+                            .Border(borderLine, Unit.Point)
+                             .Padding(5)
                             .Table(table =>
                             {
                                 table.ColumnsDefinition(columns =>
@@ -106,18 +110,30 @@ namespace QuestExampleApi.Services
 
                                 table.Header(header =>
                                 {
-                                    header.Cell().AlignLeft().Text("Sıra");
-                                    header.Cell().Text("Title");
-                                    header.Cell().Text("Category");
+                                    header.Cell().Border(1, Unit.Point).PaddingLeft(3).AlignLeft().Text("Sıra");
+                                    header.Cell().Border(1, Unit.Point).PaddingLeft(3).Text("Title");
+                                    header.Cell().Border(1, Unit.Point).PaddingLeft(3).Text("Category");
                                 });
 
                                 foreach (var item in products)
-                                {
-                                    table.Cell().AlignLeft().Text($"{item.Id} #");
-                                    table.Cell().Text(item.Title);
-                                    table.Cell().Text(item.Category);
+                                { 
+                                    table.Cell().BorderBottom(borderLine, Unit.Point).BorderVertical(1, Unit.Point).PaddingLeft(3).AlignLeft().Text($"{item.Id} #");
+                                    table.Cell().BorderBottom(borderLine, Unit.Point).BorderVertical(1, Unit.Point).PaddingLeft(3).Text(item.Title);
+                                    table.Cell().BorderBottom(borderLine, Unit.Point).BorderVertical(1, Unit.Point).PaddingLeft(3).Text(item.Category);
                                 }
-                            });
+                                table.Cell().BorderBottom(1, Unit.Point);
+                                table.Cell().BorderBottom(1, Unit.Point);
+                                table.Cell().BorderBottom(1, Unit.Point);
+                            }) ;
+                        page.Footer()
+                           .AlignCenter()
+                           .Text(x =>
+                           {
+                               x.Span("Sayfa ");
+                               x.TotalPages();
+                               x.Span(" / ");
+                               x.CurrentPageNumber();
+                           });
 
                     });
                     
