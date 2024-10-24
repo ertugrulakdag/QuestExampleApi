@@ -6,7 +6,6 @@ using QuestExampleApi.Model;
 using QuestPDF.Infrastructure;
 
 namespace QuestExampleApi.Services;
-
 public class DocumentService : IDocumentService
 {
     private readonly ILogger<DocumentService> _logger;
@@ -33,7 +32,7 @@ public class DocumentService : IDocumentService
                 {
                     page.Size(PageSizes.A4);
                     page.Margin(10);
-                    page.Header().Element(c => GeneratePdf.ComposeHeader(c, "ÜST BAŞLIK", "Alt Başlık"));
+                    page.Header().Element(c => GeneratePdf.ComposeHeader(c, request.UpHeader, request.SubHeader));
                     
                     page.Content().Column(column =>
                     {

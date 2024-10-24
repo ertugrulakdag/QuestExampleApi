@@ -2,6 +2,7 @@
 {
     public class DocumentCreateRequest
     {
-        public string? Istek { get; set; }
+        public string? UpHeader { get; set; }
+        public string? SubHeader { get; set; }
     }
 }
